@@ -10,5 +10,6 @@ public class ATaskManagerApplication {
 		SpringApplication.run(ATaskManagerApplication.class, args);
 	}
 
+	
 }
  
