@@ -24,8 +24,6 @@ public class CategoryController {
 	private final CategoryService categoryService;
 	
 	
-	
-	
 	public CategoryController(CategoryService categoryService) {
 		super();
 		this.categoryService = categoryService;

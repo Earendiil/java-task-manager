@@ -3,7 +3,6 @@ package taskmanager.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,10 +23,14 @@ import taskmanager.service.UserService;
 @RequestMapping("/api")
 public class UserController {
 
-	@Autowired
-	private UserService userService;
 	
+	private final UserService userService;
 	
+	public UserController(UserService userService) {
+		super();
+		this.userService = userService;
+	}
+
 	@PostMapping("/user")
 	public ResponseEntity<User> addUser(@Valid @RequestBody User user){
 		return new ResponseEntity<User>(userService.createUser(user) , HttpStatus.CREATED);
