@@ -23,6 +23,11 @@ import taskmanager.service.UserService;
 @RequestMapping("/api")
 public class UserController {
 
+	// testing react connection
+	@GetMapping("/hello")
+    public String sayHello() {
+        return "Hello from Spring Boot!";
+    }
 	
 	private final UserService userService;
 	
