@@ -55,6 +55,10 @@ public class TaskServiceImpl implements TaskService{
 		if (task.getCategory() == null || task.getCategory().getCategoryId() == null) {
 	        throw new IllegalArgumentException("Category id is required");
 	    }
+		if (task.getDueDate() != null && task.getDueDate().before(new Date())) {
+			throw new IllegalArgumentException("Due date must ne in the future!");
+		}
+			
 	    categoryRepository.findById(task.getCategory().getCategoryId())
 	        .orElseThrow(() -> new IllegalArgumentException("Category id not found: " + task.getCategory().getCategoryId()));
 	
