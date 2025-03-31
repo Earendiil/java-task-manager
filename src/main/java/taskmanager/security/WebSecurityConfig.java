@@ -1,5 +1,6 @@
 package taskmanager.security;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -71,45 +73,38 @@ public class WebSecurityConfig {
     @Configuration
     public class WebConfig implements WebMvcConfigurer {
 
-    // Frontend Connection
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**") // The API path to allow CORS
-                .allowedOrigins("http://localhost:5173") // React frontend URL
-                .allowedMethods("GET", "POST", "PUT", "DELETE") // Methods you want to allow
-                .allowedHeaders("*"); // Allow all headers
-    }
-    }
+    	@Bean
+    	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    	    http
+    	        .cors(cors -> cors.configurationSource(request -> {
+    	            CorsConfiguration config = new CorsConfiguration();
+    	            config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174")); // Frontend URLs
+    	            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    	            config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+    	            config.setAllowCredentials(true);
+    	            return config;
+    	        }))
+    	        .csrf(csrf -> csrf.disable())
+    	        .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+    	        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    	        .authorizeHttpRequests(auth ->
+    	            auth.requestMatchers("/api/auth/**").permitAll()
+    	                .requestMatchers("/h2-console/**").permitAll()
+    	                .requestMatchers("/api/admin/**").permitAll()
+    	                .requestMatchers("/api/public/**").permitAll()
+    	                .requestMatchers("/api/**").permitAll()  // For testing purposes
+    	                .requestMatchers("/swagger-ui/**").permitAll()
+    	                .requestMatchers("/api/test/**").permitAll()
+    	                .requestMatchers("/images/**").permitAll()
+    	                .anyRequest().authenticated()
+    	        )
+    	        .authenticationProvider(authenticationProvider())
+    	        .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+    	        .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
-
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/h2-console/**").permitAll()
-                                .requestMatchers("/api/admin/**").permitAll()
-                                .requestMatchers("/api/public/**").permitAll()
-    /* for testing purposes*/   .requestMatchers("/api/**").permitAll()
-                                .requestMatchers("/swagger-ui/**").permitAll()
-                                .requestMatchers("/api/test/**").permitAll()
-                                .requestMatchers("/images/**").permitAll()
-                                .anyRequest().authenticated()
-                );
-
-        http.authenticationProvider(authenticationProvider());
-
-        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-      
-        http.headers(headers -> headers.frameOptions(
-        		HeadersConfigurer.FrameOptionsConfig::sameOrigin));
-        
-        return http.build();
-    }
-
+    	    return http.build();
+    	}
+    
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web -> web.ignoring().requestMatchers("/v2/api-docs",
@@ -169,8 +164,9 @@ public class WebSecurityConfig {
             });
         };
     }
-
-
-    
-    
+    }
 }
+
+
+    
+    
