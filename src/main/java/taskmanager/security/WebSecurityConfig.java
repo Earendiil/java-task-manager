@@ -21,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import taskmanager.entity.AppRole;
@@ -72,38 +71,34 @@ public class WebSecurityConfig {
 
     @Configuration
     public class WebConfig implements WebMvcConfigurer {
-
+    	
     	@Bean
-    	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     	    http
     	        .cors(cors -> cors.configurationSource(request -> {
     	            CorsConfiguration config = new CorsConfiguration();
-    	            config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174")); // Frontend URLs
-    	            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-    	            config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-    	            config.setAllowCredentials(true);
+    	            config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174")); // Allow frontend
+    	            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allow all RESTful methods
+    	            config.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Allow important headers
+    	            config.setAllowCredentials(true); // Allow cookies or JWT authentication
     	            return config;
     	        }))
-    	        .csrf(csrf -> csrf.disable())
+    	        .csrf(csrf -> csrf.disable()) // Disable CSRF for testing
     	        .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
     	        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
     	        .authorizeHttpRequests(auth ->
-    	            auth.requestMatchers("/api/auth/**").permitAll()
+    	            auth.requestMatchers("/api/**").permitAll() // Allow all API requests for testing
     	                .requestMatchers("/h2-console/**").permitAll()
-    	                .requestMatchers("/api/admin/**").permitAll()
-    	                .requestMatchers("/api/public/**").permitAll()
-    	                .requestMatchers("/api/**").permitAll()  // For testing purposes
     	                .requestMatchers("/swagger-ui/**").permitAll()
-    	                .requestMatchers("/api/test/**").permitAll()
-    	                .requestMatchers("/images/**").permitAll()
     	                .anyRequest().authenticated()
     	        )
     	        .authenticationProvider(authenticationProvider())
-    	        .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+    	        .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class) // Enable if using JWT
     	        .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
     	    return http.build();
     	}
+
     
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {

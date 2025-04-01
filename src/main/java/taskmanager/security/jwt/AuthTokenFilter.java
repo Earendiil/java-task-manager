@@ -25,7 +25,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
 	    private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
-	    // ✅ Constructor Injection (No @Autowired needed)
+	    
 	    public AuthTokenFilter(JwtUtils jwtUtils, UserDetailsServiceImpl userDetailsService) {
 	        this.jwtUtils = jwtUtils;
 	        this.userDetailsService = userDetailsService;
