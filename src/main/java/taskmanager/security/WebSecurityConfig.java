@@ -30,6 +30,7 @@ import taskmanager.repositories.RoleRepository;
 import taskmanager.repositories.UserRepository;
 import taskmanager.security.jwt.AuthEntryPointJwt;
 import taskmanager.security.jwt.AuthTokenFilter;
+import taskmanager.security.jwt.JwtUtils;
 import taskmanager.security.services.UserDetailsServiceImpl;
 
 @Configuration
@@ -41,10 +42,12 @@ public class WebSecurityConfig {
 
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter(null, userDetailsService);
+        return new AuthTokenFilter(jwtUtils, userDetailsService);
     }
 
 
@@ -129,7 +132,7 @@ public class WebSecurityConfig {
                     });
 
             Set<Role> userRoles = Set.of(userRole);
-            Set<Role> adminRoles = Set.of(userRole, adminRole);
+            Set<Role> adminRoles = Set.of(adminRole);
 
 
             // Create users if not already present

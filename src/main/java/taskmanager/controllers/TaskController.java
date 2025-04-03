@@ -16,16 +16,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import taskmanager.entity.Task;
+import taskmanager.entity.User;
 import taskmanager.service.TaskService;
+import taskmanager.service.UserService;
 
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
 	
 	private final TaskService taskService;
-
-    public TaskController(TaskService taskService) {
+	private final UserService userService;
+	
+	
+    public TaskController(TaskService taskService, UserService userService) {
         this.taskService = taskService;
+		this.userService = userService;
     }
     
     
@@ -60,6 +65,13 @@ public class TaskController {
 	public ResponseEntity<String> deleteTask(@PathVariable Long taskId){
 		taskService.deleteTaskById(taskId);
 		return ResponseEntity.ok("Task deleted!");
+		
+	}
+	
+	@GetMapping("/{taskId}/users")
+	public ResponseEntity<List<User>> getTaskUsers(@PathVariable Long taskId){
+		List<User> usersList = taskService.getUsersAssignedToTask(taskId);
+		return new ResponseEntity<List<User>>(usersList, HttpStatus.OK);
 		
 	}
 	

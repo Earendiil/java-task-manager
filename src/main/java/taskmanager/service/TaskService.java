@@ -6,6 +6,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 import taskmanager.entity.Task;
+import taskmanager.entity.User;
 
 
 public interface TaskService {
@@ -22,6 +23,8 @@ public interface TaskService {
 	List<Task> findIdleTasks();
 
 	List<Task> filterTasks(Boolean completed, Date dueDate, Long categoryId, Long userId);
+
+	List<User> getUsersAssignedToTask(Long taskId);
 
 	
 }

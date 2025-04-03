@@ -61,7 +61,7 @@ public class TaskServiceImpl implements TaskService{
 			
 	    categoryRepository.findById(task.getCategory().getCategoryId())
 	        .orElseThrow(() -> new IllegalArgumentException("Category id not found: " + task.getCategory().getCategoryId()));
-	
+	 
 	    
 	    Task updatedTask = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task", "task id", taskId));
 		updatedTask.setDescription(task.getDescription());
@@ -151,10 +151,16 @@ public class TaskServiceImpl implements TaskService{
         return taskRepository.findAll(); // Return all tasks if no filter is applied
     }
 	
-	
-	
-	
-	
 
-	
+	@Override
+	public List<User> getUsersAssignedToTask(Long taskId) {
+		List<User> users = taskRepository.findUsersByTaskId(taskId);
+		System.out.println("Users found: " + users);
+
+		if (users == null || users.isEmpty()) 
+		    throw new ResourceNotFoundException("No users assigned");
+
+		
+		return 	users;
+	}
 }

@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import taskmanager.entity.Task;
+import taskmanager.entity.User;
+
 import java.util.List;
 import java.util.Date;
 
@@ -19,6 +21,9 @@ public interface TaskRepository extends JpaRepository<Task, Long>{
 	
 	@Query("SELECT t FROM Task t WHERE t.user.userId = :userId")
 	List<Task> findByUserId(Long userId);
+
+	@Query("SELECT u FROM User u JOIN u.tasks t WHERE t.taskId = :taskId")
+	List<User> findUsersByTaskId(Long taskId);
 	
 	
 	

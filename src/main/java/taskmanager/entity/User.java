@@ -1,5 +1,6 @@
 package taskmanager.entity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -50,8 +51,9 @@ public class User {
 	@Size(min = 6, message = "Password must be at least 6 characters long")
 	private String password;
 	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	@ManyToMany(mappedBy = "assignedUsers")
 	private List<Task> tasks;
+
 	
 	
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
@@ -66,7 +68,22 @@ public class User {
         this.username = userName;
         this.email = email;
         this.password = password;
+        
     }
+
+
+	public User(
+			@Pattern(regexp = ".*[a-zA-Z].*", message = "Must contain at least one alphabetical letter") @NotBlank(message = "username required") String username,
+			@NotBlank(message = "email is required") @Email(message = "Invalid email format") String email,
+			@NotBlank(message = "password required") @Size(min = 6, message = "Password must be at least 6 characters long") String password,
+			List<Task> tasks, Set<Role> roles) {
+		super();
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.roles = roles;
+		this.tasks = new ArrayList<>();
+	}
 
 	
 	

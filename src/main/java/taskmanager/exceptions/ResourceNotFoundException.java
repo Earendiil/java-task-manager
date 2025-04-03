@@ -1,5 +1,7 @@
 package taskmanager.exceptions;
 
+
+
 public class ResourceNotFoundException extends RuntimeException{
 
 
@@ -20,6 +22,12 @@ public class ResourceNotFoundException extends RuntimeException{
 		this.resourceName = resourceName;
 		this.field = field;
 		this.fieldId = fieldId;
+	}
+	
+	
+	public ResourceNotFoundException(String resourceName) {
+		super();
+		this.resourceName = resourceName;
 	}
 	public ResourceNotFoundException() {
 		super();
