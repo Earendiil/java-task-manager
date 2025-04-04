@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import taskmanager.dto.TaskDTO;
 import taskmanager.entity.Task;
 import taskmanager.entity.User;
 import taskmanager.service.TaskService;
@@ -35,9 +36,9 @@ public class TaskController {
     
     
     @PostMapping("")
-	public ResponseEntity<Task> addTask(@Valid @RequestBody Task task){
-		Task newTask = taskService.createTask(task);
-		return new ResponseEntity<Task>(newTask, HttpStatus.CREATED);
+	public ResponseEntity<TaskDTO> addTask(@Valid @RequestBody TaskDTO taskDTO){
+		TaskDTO newTaskDTO = taskService.createTask(taskDTO);
+		return new ResponseEntity<TaskDTO>(taskDTO, HttpStatus.CREATED);
 	}
     
 	@PutMapping("/{taskId}")

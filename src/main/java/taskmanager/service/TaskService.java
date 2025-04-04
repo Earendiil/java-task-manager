@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import jakarta.validation.Valid;
+import taskmanager.dto.TaskDTO;
 import taskmanager.entity.Task;
 import taskmanager.entity.User;
 
@@ -12,7 +13,7 @@ import taskmanager.entity.User;
 public interface TaskService {
 
 	
-	Task createTask(@Valid Task task);
+	TaskDTO createTask(TaskDTO taskDTO);
 
 	Task updateTask(Long taskId, Task task);
 

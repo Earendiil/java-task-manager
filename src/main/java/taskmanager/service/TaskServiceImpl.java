@@ -6,9 +6,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.modelmapper.ModelMapper;
 import jakarta.transaction.Transactional;
+import taskmanager.dto.TaskDTO;
+import taskmanager.entity.Category;
 import taskmanager.entity.Task;
 import taskmanager.entity.User;
 import taskmanager.exceptions.ResourceNotFoundException;
@@ -23,6 +26,8 @@ public class TaskServiceImpl implements TaskService{
 	private final TaskRepository taskRepository;
 	private final UserRepository userRepository;
 	User user;
+	@Autowired
+	private ModelMapper modelMapper;
 	
 	public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
 		super();
@@ -32,17 +37,30 @@ public class TaskServiceImpl implements TaskService{
 	}
 
 	@Override
-	public Task createTask(Task task) {
-	   
-	    if (task.getCategory() == null || task.getCategory().getCategoryId() == null) {
-	        throw new IllegalArgumentException("Category id is required");
+	public TaskDTO createTask(TaskDTO taskDTO) {
+	    if (taskDTO.getCategoryId() == null) {
+	        throw new IllegalArgumentException("Category ID is required");
 	    }
 
-	    categoryRepository.findById(task.getCategory().getCategoryId())
-	        .orElseThrow(() -> new IllegalArgumentException("Category ID not found: " + task.getCategory().getCategoryId()));
+	    // Fetch category from DB
+	    Category category = categoryRepository.findById(taskDTO.getCategoryId())
+	        .orElseThrow(() -> new IllegalArgumentException("Category ID not found: " + taskDTO.getCategoryId()));
 
-		
-	    return taskRepository.save(task);
+	    // Convert DTO to Entity
+	    Task task = new Task();
+	    task.setTaskName(taskDTO.getTaskName());
+	    task.setTitle(taskDTO.getTitle());
+	    task.setDescription(taskDTO.getDescription());
+	    task.setDueDate(taskDTO.getDueDate());
+	    task.setCompleted(taskDTO.isCompleted());
+	    task.setCategory(category);
+	   
+
+	    // Save task entity
+	    Task savedTask = taskRepository.save(task);
+
+	    
+	    return modelMapper.map(savedTask, TaskDTO.class);
 	}
 
 
