@@ -81,7 +81,11 @@ public class TaskController {
 		return new ResponseEntity<String>("Task assigned!" , HttpStatus.OK);
 		
 	}
-	
+	@DeleteMapping("/{taskId}/{userId}")
+	public ResponseEntity<String> removeTask (@PathVariable Long taskId, @PathVariable Long userId){
+		taskService.unassignTask(taskId, userId);
+		return new ResponseEntity<String>( "User removed", HttpStatus.OK);
+	}
 	
 	@GetMapping("/idle")
 	public ResponseEntity<List<Task>> getUnassignedTasks(){

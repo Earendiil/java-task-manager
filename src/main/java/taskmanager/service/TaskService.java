@@ -28,5 +28,7 @@ public interface TaskService {
 
 	void assignToUser(Long taskId, Long userId);
 
+	void unassignTask(Long taskId, Long userId);
+
 	
 }

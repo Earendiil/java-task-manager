@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import taskmanager.entity.Task;
 import taskmanager.entity.User;
 import taskmanager.exceptions.ResourceNotFoundException;
@@ -177,5 +178,19 @@ public class TaskServiceImpl implements TaskService{
 	public List<Task> findIdleTasks() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Transactional
+	@Override
+	public void unassignTask(Long taskId, Long userId) {
+		Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task not found!"));
+		User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found!"));
+		
+		task.getAssignedUsers().remove(user);
+		user.getTasks().remove(task);
+		
+		taskRepository.save(task);
+	    userRepository.save(user);
+		
 	}
 }
