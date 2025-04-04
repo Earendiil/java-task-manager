@@ -75,6 +75,14 @@ public class TaskController {
 		
 	}
 	
+	@PostMapping("/{taskId}/{userId}")
+	public ResponseEntity<String> assignTask(@PathVariable Long taskId, @PathVariable Long userId){
+		 taskService.assignToUser(taskId, userId);
+		return new ResponseEntity<String>("Task assigned!" , HttpStatus.OK);
+		
+	}
+	
+	
 	@GetMapping("/idle")
 	public ResponseEntity<List<Task>> getUnassignedTasks(){
 		List<Task> tasks = taskService.findIdleTasks();

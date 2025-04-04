@@ -32,11 +32,7 @@ public class TaskServiceImpl implements TaskService{
 
 	@Override
 	public Task createTask(Task task) {
-	    if (task.getUserId() != null) { // Use getUserId() instead of task.getUser()
-	        User user = userRepository.findById(task.getUserId())
-	                .orElseThrow(() -> new RuntimeException("User not found"));
-	        task.setUser(user);
-	    }
+	   
 	    if (task.getCategory() == null || task.getCategory().getCategoryId() == null) {
 	        throw new IllegalArgumentException("Category id is required");
 	    }
@@ -67,8 +63,6 @@ public class TaskServiceImpl implements TaskService{
 		updatedTask.setDescription(task.getDescription());
 		updatedTask.setDueDate(task.getDueDate());
 		updatedTask.setTitle(task.getTitle());
-		updatedTask.setUser(task.getUser());
-		updatedTask.setUserId(task.getUserId());
 	    updatedTask.setCategoryId(task.getCategoryId());
 		
 		taskRepository.save(updatedTask);
@@ -83,11 +77,7 @@ public class TaskServiceImpl implements TaskService{
 		if (tasks.isEmpty()) {
 			throw new RuntimeException("No tasks exist!");
 		}
-		 if (userId != null) {
-		        tasks = tasks.stream()
-		                     .filter(task -> task.getUser() != null && task.getUser().getUserId().equals(userId))
-		                     .collect(Collectors.toList());
-		    }
+		
 		    if (completed != null) {
 		        tasks = tasks.stream()
 		                     .filter(task -> task.isCompleted() == completed)
@@ -121,22 +111,22 @@ public class TaskServiceImpl implements TaskService{
 		taskRepository.delete(updatedTask);
 	}
 
-
-	@Override
-	public List<Task> findIdleTasks() {
-	
-		List<Task> idleTasks = new ArrayList<>();
-		List<Task> tasks = taskRepository.findAll();
-		if (tasks.isEmpty()) {
-			throw new RuntimeException("No tasks exist!");
-		}
-		for (Task task : tasks) {
-			if (task.getUser() == null) {
-				idleTasks.add(task);
-			}
-		}
-		return idleTasks;
-	}
+//
+//	@Override
+//	public List<Task> findIdleTasks() {
+//	
+//		List<Task> idleTasks = new ArrayList<>();
+//		List<Task> tasks = taskRepository.findAll();
+//		if (tasks.isEmpty()) {
+//			throw new RuntimeException("No tasks exist!");
+//		}
+//		for (Task task : tasks) {
+//			if (task.getUser() == null) {
+//				idleTasks.add(task);
+//			}
+//		}
+//		return idleTasks;
+//	}
 
 	public List<Task> filterTasks(Boolean completed, Date dueDate, Long categoryId, Long userId) {
         if (completed != null) {
@@ -146,7 +136,7 @@ public class TaskServiceImpl implements TaskService{
         } else if (categoryId != null) {
             return taskRepository.findByCategory_CategoryId(categoryId);
         } else if (userId != null) {
-            return taskRepository.findByUserId(userId);
+            return taskRepository.findByUser_UserId(userId);
         }
         return taskRepository.findAll(); // Return all tasks if no filter is applied
     }
@@ -159,8 +149,33 @@ public class TaskServiceImpl implements TaskService{
 
 		if (users == null || users.isEmpty()) 
 		    throw new ResourceNotFoundException("No users assigned");
-
-		
 		return 	users;
+	}
+
+	@Override
+	public void assignToUser(Long taskId, Long userId) {
+		Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task not found!"));
+		User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found!"));
+		if (task.getAssignedUsers() == null) {
+	        task.setAssignedUsers(new ArrayList<>());
+	    }
+		if (!task.getAssignedUsers().contains(user)) {
+			task.getAssignedUsers().add(user);
+		}
+		if (user.getTasks().isEmpty()) {
+			user.setTasks(new ArrayList<>());
+		}
+		if (!user.getTasks().contains(task)) {
+			user.getTasks().add(task);
+		}
+		userRepository.save(user);
+		taskRepository.save(task);
+		System.out.println("Added");
+	}
+
+	@Override
+	public List<Task> findIdleTasks() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

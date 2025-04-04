@@ -26,5 +26,7 @@ public interface TaskService {
 
 	List<User> getUsersAssignedToTask(Long taskId);
 
+	void assignToUser(Long taskId, Long userId);
+
 	
 }
