@@ -144,6 +144,21 @@ public class Task {
 		this.completed = completed;
 		this.user = user;
 	}
+
+	public Task(
+			@NotBlank @Size(min = 3, max = 20, message = "Task name must be within 3-20 characters") String taskName,
+			@NotBlank(message = "Tittle is required") @Size(min = 5, max = 20, message = "Title must be within 5-20 characters") String title,
+			@Size(max = 150, message = "Cannot exceed 150 characters") String description,
+			@NotNull(message = "Due date is required") @Future(message = "Due date must be in the future!") Date dueDate,
+			boolean completed, Category category) {
+		super();
+		this.taskName = taskName;
+		this.title = title;
+		this.description = description;
+		this.dueDate = dueDate;
+		this.completed = completed;
+		this.category = category;
+	}
 	
 	
 	

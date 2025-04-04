@@ -1,5 +1,7 @@
 package taskmanager.security;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -24,9 +26,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import taskmanager.entity.AppRole;
+import taskmanager.entity.Category;
 import taskmanager.entity.Role;
+import taskmanager.entity.Task;
 import taskmanager.entity.User;
+import taskmanager.repositories.CategoryRepository;
 import taskmanager.repositories.RoleRepository;
+import taskmanager.repositories.TaskRepository;
 import taskmanager.repositories.UserRepository;
 import taskmanager.security.jwt.AuthEntryPointJwt;
 import taskmanager.security.jwt.AuthTokenFilter;
@@ -113,56 +119,11 @@ public class WebSecurityConfig {
                 "/webjars/**"));
     }
     
-    @Bean
-    public CommandLineRunner initData(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        return args -> {
-            // Retrieve or create roles
-            Role userRole = roleRepository.findByRoleName(AppRole.ROLE_USER)
-                    .orElseGet(() -> {
-                        Role newUserRole = new Role(AppRole.ROLE_USER);
-                        return roleRepository.save(newUserRole);
-                    });
-
-         
-
-            Role adminRole = roleRepository.findByRoleName(AppRole.ROLE_ADMIN)
-                    .orElseGet(() -> {
-                        Role newAdminRole = new Role(AppRole.ROLE_ADMIN);
-                        return roleRepository.save(newAdminRole);
-                    });
-
-            Set<Role> userRoles = Set.of(userRole);
-            Set<Role> adminRoles = Set.of(adminRole);
-
-
-            // Create users if not already present
-            if (!userRepository.existsByUsername("user1")) {
-                User user1 = new User("user1", "user1@example.com", passwordEncoder.encode("password1"));
-                userRepository.save(user1);
-            }
-
-           
-
-            if (!userRepository.existsByUsername("admin")) {
-                User admin = new User("admin", "admin@example.com", passwordEncoder.encode("adminPass"));
-                userRepository.save(admin);
-            }
-
-            // Update roles for existing users
-            userRepository.findByUsername("user1").ifPresent(user -> {
-                user.setRoles(userRoles);
-                userRepository.save(user);
-            });
-
-           
-
-            userRepository.findByUsername("admin").ifPresent(admin -> {
-                admin.setRoles(adminRoles);
-                userRepository.save(admin);
-            });
-        };
+    
     }
-    }
+    
+    
+   
 }
 
 
