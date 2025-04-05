@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 import jakarta.transaction.Transactional;
@@ -187,10 +186,9 @@ public class TaskServiceImpl implements TaskService{
 	@Override
 	public List<User> getUsersAssignedToTask(Long taskId) {
 		List<User> users = taskRepository.findUsersByTaskId(taskId);
-		System.out.println("Users found: " + users);
 
 		if (users == null || users.isEmpty()) 
-		    throw new ResourceNotFoundException("No users assigned");
+		    throw new ResourceNotFoundException("Users", "for the task", taskId);
 		return 	users;
 	}
 

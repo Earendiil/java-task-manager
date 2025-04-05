@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -51,6 +54,7 @@ public class User {
 	@Size(min = 6, message = "Password must be at least 6 characters long")
 	private String password;
 	
+	@JsonIgnore
 	@ManyToMany(mappedBy = "assignedUsers")
 	private List<Task> tasks;
 

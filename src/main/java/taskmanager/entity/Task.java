@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
@@ -87,9 +88,10 @@ public class Task {
 	    joinColumns = @JoinColumn(name = "task_id"),
 	    inverseJoinColumns = @JoinColumn(name = "user_id")
 	)
+	@JsonIgnore
 	private List<User> assignedUsers;
 	
-	    @JsonIgnore
+	    
 	    public List<User> getAssignedUsers() {
 	        return assignedUsers;
 	    }
@@ -98,7 +100,19 @@ public class Task {
 	        this.assignedUsers = assignedUsers;
 	    }
 	    
-	    
+	    // edited to avoid recursion
+	    @Override
+	    public String toString() {
+	        return "Task{" +
+	               "taskId=" + taskId +
+	               ", taskName='" + taskName + '\'' +
+	               ", title='" + title + '\'' +
+	               ", description='" + description + '\'' +
+	               ", dueDate=" + dueDate +
+	               ", completed=" + completed +
+	               ", assignedUsers=" + (assignedUsers != null ? assignedUsers.size() : 0) + // Avoid deep recursion
+	               '}';
+	    }
 	    
 	
 	public Task(
