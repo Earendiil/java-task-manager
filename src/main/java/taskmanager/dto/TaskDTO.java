@@ -7,7 +7,6 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import taskmanager.entity.Task;
 import taskmanager.entity.User;
 
 @Data
@@ -22,7 +21,7 @@ public class TaskDTO {
     private Date dueDate;
     private boolean completed;
     private Long categoryId;
-    private List<User> assignedUsers = new ArrayList<>();
+    private List<UserIdDTO> assignedUsers = new ArrayList<>();
     
    
     

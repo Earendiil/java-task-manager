@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 import jakarta.transaction.Transactional;
 import taskmanager.dto.TaskDTO;
+import taskmanager.dto.UserIdDTO;
 import taskmanager.entity.Category;
 import taskmanager.entity.Task;
 import taskmanager.entity.User;
@@ -25,16 +26,21 @@ public class TaskServiceImpl implements TaskService{
 	private final CategoryRepository categoryRepository;
 	private final TaskRepository taskRepository;
 	private final UserRepository userRepository;
+	private final ModelMapper modelMapper;
 	User user;
-	@Autowired
-	private ModelMapper modelMapper;
 	
-	public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
+	
+
+
+	public TaskServiceImpl(CategoryRepository categoryRepository, TaskRepository taskRepository,
+			UserRepository userRepository, ModelMapper modelMapper) {
 		super();
 		this.categoryRepository = categoryRepository;
 		this.taskRepository = taskRepository;
 		this.userRepository = userRepository;
+		this.modelMapper = modelMapper;
 	}
+
 
 	@Override
 	public TaskDTO createTask(TaskDTO taskDTO) {
@@ -42,7 +48,6 @@ public class TaskServiceImpl implements TaskService{
 	        throw new IllegalArgumentException("Category ID is required");
 	    }
 
-	    // Fetch category from DB
 	    Category category = categoryRepository.findById(taskDTO.getCategoryId())
 	        .orElseThrow(() -> new IllegalArgumentException("Category ID not found: " + taskDTO.getCategoryId()));
 
@@ -54,11 +59,8 @@ public class TaskServiceImpl implements TaskService{
 	    task.setDueDate(taskDTO.getDueDate());
 	    task.setCompleted(taskDTO.isCompleted());
 	    task.setCategory(category);
-	   
-
-	    // Save task entity
+	  
 	    Task savedTask = taskRepository.save(task);
-
 	    
 	    return modelMapper.map(savedTask, TaskDTO.class);
 	}
@@ -91,7 +93,7 @@ public class TaskServiceImpl implements TaskService{
 
 
 	@Override
-	public List<Task> findAllTasks(Long userId, Boolean completed, Long categoryId, String sortBy, String sortDirection) {
+	public List<TaskDTO> findAllTasks(Long userId, Boolean completed, Long categoryId, String sortBy, String sortDirection) {
 		List<Task> tasks = taskRepository.findAll();
 		if (tasks.isEmpty()) {
 			throw new RuntimeException("No tasks exist!");
@@ -119,9 +121,30 @@ public class TaskServiceImpl implements TaskService{
 		                         .sorted(Comparator.comparing(Task::getDueDate).reversed())  // Change to the appropriate field
 		                         .collect(Collectors.toList());
 		        }
-		    }
-		return tasks;
+		        }
+		    
+		    List<TaskDTO> dtos = tasks.stream().map(task -> {
+		        TaskDTO dto = new TaskDTO();
+		        dto.setTaskId(task.getTaskId());
+		        dto.setTaskName(task.getTaskName());
+		        dto.setTitle(task.getTitle());
+		        dto.setDescription(task.getDescription());
+		        dto.setDueDate(task.getDueDate());
+		        dto.setCompleted(task.isCompleted());
+		        dto.setCategoryId(task.getCategory().getCategoryId());
+
+		        List<UserIdDTO> userSummaries = task.getAssignedUsers().stream()
+		            .map(user -> new UserIdDTO(user.getUserId(), user.getUsername()))
+		            .collect(Collectors.toList());
+
+		        dto.setAssignedUsers(userSummaries);
+
+		        return dto;
+		    }).collect(Collectors.toList());
+			return dtos;
+	
 	}
+	
 
 
 	@Override

@@ -17,7 +17,7 @@ public interface TaskService {
 
 	Task updateTask(Long taskId, Task task);
 
-	List<Task> findAllTasks(Long userId, Boolean completed, Long categoryId, String sortBy, String sortDirection);
+	List<TaskDTO> findAllTasks(Long userId, Boolean completed, Long categoryId, String sortBy, String sortDirection);
 
 	void deleteTaskById(Long taskId);
 

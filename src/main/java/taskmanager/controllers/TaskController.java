@@ -2,6 +2,8 @@ package taskmanager.controllers;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +29,8 @@ public class TaskController {
 	
 	private final TaskService taskService;
 	private final UserService userService;
-	
+	@Autowired
+	ModelMapper modelMapper;
 	
     public TaskController(TaskService taskService, UserService userService) {
         this.taskService = taskService;
@@ -48,20 +51,19 @@ public class TaskController {
 		Task updatedTask = taskService.updateTask(taskId, task);
 		return new ResponseEntity<Task>(updatedTask, HttpStatus.OK);
 	}
-	
 	@GetMapping("")
-	public ResponseEntity<List<Task>> getAllTasks(
-            @RequestParam(required = false) Long userId,
-            @RequestParam(required = false) Boolean completed,
-            @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) String sortBy,  
-            @RequestParam(required = false) String sortDirection
-    ) {
-        List<Task> tasks = taskService.findAllTasks(userId, completed, categoryId, sortBy, sortDirection);
-        return new ResponseEntity<>(tasks, HttpStatus.OK);
-		
-		
+	public ResponseEntity<List<TaskDTO>> getAllTasks(
+	        @RequestParam(required = false) Long userId,
+	        @RequestParam(required = false) Boolean completed,
+	        @RequestParam(required = false) Long categoryId,
+	        @RequestParam(required = false) String sortBy,
+	        @RequestParam(required = false) String sortDirection
+	) {
+	    List<TaskDTO> tasks = taskService.findAllTasks(userId, completed, categoryId, sortBy, sortDirection);
+
+	    return ResponseEntity.ok(tasks);
 	}
+	
 	@DeleteMapping("/{taskId}")
 	public ResponseEntity<String> deleteTask(@PathVariable Long taskId){
 		taskService.deleteTaskById(taskId);
