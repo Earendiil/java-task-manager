@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import taskmanager.dto.UserDTO;
+import taskmanager.dto.UserResponse;
 import taskmanager.entity.Task;
 import taskmanager.entity.User;
 import taskmanager.service.UserService;
@@ -38,21 +40,22 @@ public class UserController {
 	}
 
 	@PostMapping("/user")
-	public ResponseEntity<User> addUser(@Valid @RequestBody User user){
-		return new ResponseEntity<User>(userService.createUser(user) , HttpStatus.CREATED);
+	public ResponseEntity<String> addUser(@Valid @RequestBody UserDTO userDTO){
+		 userService.createUser(userDTO);
+		return new ResponseEntity<>("User created", HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/users")
-	public ResponseEntity<List<User>> getAllUsers(){
-		List<User> users = new ArrayList<>();
+	public ResponseEntity<List<UserResponse>> getAllUsers(){
+		List<UserResponse> users = new ArrayList<>();
 		users = userService.findAllUsers();
-		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+		return new ResponseEntity<List<UserResponse>>(users, HttpStatus.OK);
 	}
 	
 	@GetMapping("/users/{userId}")
-	public ResponseEntity<User> findUser(@PathVariable Long userId){
-		User user = userService.findByUserId(userId);
-		return new ResponseEntity<User>(user, HttpStatus.OK);
+	public ResponseEntity<UserDTO> findUser(@PathVariable Long userId){
+		UserDTO userDTO = userService.findByUserId(userId);
+		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}
 	
 	@PutMapping("/users/{userId}")

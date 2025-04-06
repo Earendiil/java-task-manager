@@ -1,10 +1,16 @@
 package taskmanager.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.validation.Valid;
+import taskmanager.dto.UserDTO;
+import taskmanager.dto.UserResponse;
 import taskmanager.entity.Task;
 import taskmanager.entity.User;
 import taskmanager.exceptions.ResourceNotFoundException;
@@ -15,32 +21,45 @@ public class UserServiceImpl implements UserService{
 
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	ModelMapper modelMapper;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	@Override
-	public User createUser(User user) {
-		if (userRepository.existsByUsername(user.getUsername())) {
-			throw new IllegalArgumentException("Username already exists!");
-		}
-		if (userRepository.existsByEmail(user.getEmail())) {
-			throw new IllegalArgumentException("Email already exists!");
-		}
-		userRepository.save(user);
-		return user;
+	public void createUser(@Valid UserDTO userDTO) {
+	    if (userRepository.existsByUsername(userDTO.getUsername())) {
+	        throw new IllegalArgumentException("Username already exists!");
+	    }
+	    if (userRepository.existsByEmail(userDTO.getEmail())) {
+	        throw new IllegalArgumentException("Email already exists!");
+	    }
+
+	    User user = modelMapper.map(userDTO, User.class);
+	    user.setPassword(passwordEncoder.encode(user.getPassword()));
+	    userRepository.save(user);
 	}
 
+
 	@Override
-	public List<User> findAllUsers() {
+	public List<UserResponse> findAllUsers() {
 		List<User> users =	userRepository.findAll();
 			if (users.isEmpty()) {
 				throw new RuntimeException("No Users exist");
 			}
-			return users;
+			
+		// this is needed to map an entire list	
+	 return users.stream()
+				.map(user -> modelMapper.map(user, UserResponse.class))
+				.collect(Collectors.toList());
+		
+			
 	}
 
 	@Override
-	public User findByUserId(Long userId) {
+	public UserDTO findByUserId(Long userId) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "user id", userId));
-		return user;
+		return modelMapper.map(user, UserDTO.class);
 	}
 
 	@Override

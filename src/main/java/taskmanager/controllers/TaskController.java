@@ -20,7 +20,6 @@ import jakarta.validation.Valid;
 import taskmanager.dto.TaskDTO;
 import taskmanager.dto.TaskResponse;
 import taskmanager.dto.UserResponse;
-import taskmanager.entity.Task;
 import taskmanager.service.TaskService;
 import taskmanager.service.UserService;
 
@@ -29,13 +28,12 @@ import taskmanager.service.UserService;
 public class TaskController {
 	
 	private final TaskService taskService;
-	private final UserService userService;
 	@Autowired
 	ModelMapper modelMapper;
 	
-    public TaskController(TaskService taskService, UserService userService) {
+    public TaskController(TaskService taskService) {
         this.taskService = taskService;
-		this.userService = userService;
+		
     }
     
     

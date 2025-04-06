@@ -2,17 +2,20 @@ package taskmanager.service;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+import taskmanager.dto.UserDTO;
+import taskmanager.dto.UserResponse;
 import taskmanager.entity.Task;
 import taskmanager.entity.User;
 
 public interface UserService {
 
 
-	User createUser(User user);
+	void createUser(@Valid UserDTO userDTO);
 
-	List<User> findAllUsers();
+	List<UserResponse> findAllUsers();
 
-	User findByUserId(Long userId);
+	UserDTO findByUserId(Long userId);
 
 	User updateUser(Long userId, User user);
 
