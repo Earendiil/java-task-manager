@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import taskmanager.dto.TaskDTO;
+import taskmanager.dto.TaskResponse;
 import taskmanager.dto.UserResponse;
 import taskmanager.entity.Task;
-import taskmanager.entity.User;
 import taskmanager.service.TaskService;
 import taskmanager.service.UserService;
 
@@ -46,12 +46,13 @@ public class TaskController {
 	}
     
 	@PutMapping("/{taskId}")
-	public ResponseEntity<Task> updateTask(@Valid @PathVariable Long taskId, @RequestBody Task task
-											){
+	public ResponseEntity<TaskDTO> updateTask(@Valid @PathVariable Long taskId,
+											@RequestBody TaskDTO task){
 		
-		Task updatedTask = taskService.updateTask(taskId, task);
-		return new ResponseEntity<Task>(updatedTask, HttpStatus.OK);
+		TaskDTO updatedTask = taskService.updateTask(taskId, task);
+		return new ResponseEntity<TaskDTO>(updatedTask, HttpStatus.OK);
 	}
+	
 	@GetMapping("")
 	public ResponseEntity<List<TaskDTO>> getAllTasks(
 	        @RequestParam(required = false) Long userId,
@@ -92,9 +93,10 @@ public class TaskController {
 	}
 	
 	@GetMapping("/idle")
-	public ResponseEntity<List<Task>> getUnassignedTasks(){
-		List<Task> tasks = taskService.findIdleTasks();
-		return new ResponseEntity<List<Task>>(tasks, HttpStatus.OK);
+	public ResponseEntity<List<TaskResponse>> getUnassignedTasks(){
+		List<TaskResponse> tasks = taskService.findIdleTasks();
+		 
+		return new ResponseEntity<List<TaskResponse>>(tasks, HttpStatus.OK);
 	}
 	
 	

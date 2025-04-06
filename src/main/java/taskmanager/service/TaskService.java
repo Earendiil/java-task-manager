@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import taskmanager.dto.TaskDTO;
+import taskmanager.dto.TaskResponse;
 import taskmanager.dto.UserResponse;
 import taskmanager.entity.Task;
 
@@ -14,13 +15,11 @@ public interface TaskService {
 	
 	TaskDTO createTask(TaskDTO taskDTO);
 
-	Task updateTask(Long taskId, Task task);
-
 	List<TaskDTO> findAllTasks(Long userId, Boolean completed, Long categoryId, String sortBy, String sortDirection);
 
 	void deleteTaskById(Long taskId);
 
-	List<Task> findIdleTasks();
+	List<TaskResponse> findIdleTasks();
 
 	List<Task> filterTasks(Boolean completed, Date dueDate, Long categoryId, Long userId);
 
@@ -29,6 +28,8 @@ public interface TaskService {
 	void assignToUser(Long taskId, Long userId);
 
 	void unassignTask(Long taskId, Long userId);
+
+	TaskDTO updateTask(Long taskId, TaskDTO taskDTO);
 
 	
 }

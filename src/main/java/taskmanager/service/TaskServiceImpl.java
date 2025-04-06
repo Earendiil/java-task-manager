@@ -6,10 +6,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 import jakarta.transaction.Transactional;
 import taskmanager.dto.TaskDTO;
+import taskmanager.dto.TaskResponse;
 import taskmanager.dto.UserResponse;
 import taskmanager.entity.Category;
 import taskmanager.entity.Task;
@@ -67,28 +70,29 @@ public class TaskServiceImpl implements TaskService{
 
 
 	@Override
-	public Task updateTask(Long taskId, Task task) {
+	public TaskDTO updateTask(Long taskId, TaskDTO taskDTO) {
 
-		if (task.getCategory() == null || task.getCategory().getCategoryId() == null) {
+		if (taskDTO.getCategoryId() == null || taskDTO.getCategoryId() == null) {
 	        throw new IllegalArgumentException("Category id is required");
 	    }
-		if (task.getDueDate() != null && task.getDueDate().before(new Date())) {
-			throw new IllegalArgumentException("Due date must ne in the future!");
-		}
-			
-	    categoryRepository.findById(task.getCategory().getCategoryId())
-	        .orElseThrow(() -> new IllegalArgumentException("Category id not found: " + task.getCategory().getCategoryId()));
+		if (taskDTO.getDueDate() != null && taskDTO.getDueDate().before(new Date())) {
+	        throw new IllegalArgumentException("Due date must be in the future!");
+	    }
+		
+	    categoryRepository.findById(taskDTO.getCategoryId())
+	        .orElseThrow(() -> new IllegalArgumentException("Category id not found: " + taskDTO.getCategoryId()));
 	 
 	    
 	    Task updatedTask = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task", "task id", taskId));
-		updatedTask.setDescription(task.getDescription());
-		updatedTask.setDueDate(task.getDueDate());
-		updatedTask.setTitle(task.getTitle());
-	    updatedTask.setCategoryId(task.getCategoryId());
+		updatedTask.setTaskName(taskDTO.getTaskName());
+	    updatedTask.setDescription(taskDTO.getDescription());
+		updatedTask.setDueDate(taskDTO.getDueDate());
+		updatedTask.setTitle(taskDTO.getTitle());
+	    updatedTask.setCategoryId(taskDTO.getCategoryId());
 		
 		taskRepository.save(updatedTask);
 	
-	return updatedTask;
+		return modelMapper.map(updatedTask, TaskDTO.class);
 	}
 
 
@@ -153,22 +157,29 @@ public class TaskServiceImpl implements TaskService{
 		taskRepository.delete(updatedTask);
 	}
 
-//
-//	@Override
-//	public List<Task> findIdleTasks() {
-//	
-//		List<Task> idleTasks = new ArrayList<>();
-//		List<Task> tasks = taskRepository.findAll();
-//		if (tasks.isEmpty()) {
-//			throw new RuntimeException("No tasks exist!");
-//		}
-//		for (Task task : tasks) {
-//			if (task.getUser() == null) {
-//				idleTasks.add(task);
-//			}
-//		}
-//		return idleTasks;
-//	}
+
+	@Override
+	public List<TaskResponse> findIdleTasks() {
+	    List<TaskResponse> idleTasks = new ArrayList<>();
+	    
+	    // Creating this custom is more efficient that pulling and processing
+	    // all user data
+	    List<Task> tasks = taskRepository.findByAssignedUsersIsEmpty();
+
+	    if (tasks.isEmpty()) {
+	    	throw new ResourceNotFoundException("No idle tasks!");
+	    }
+	    
+	    for (Task task : tasks) {
+	        TaskResponse taskResponse = new TaskResponse();
+	        taskResponse.setTaskId(task.getTaskId());
+	        taskResponse.setTaskName(task.getTaskName());
+	        taskResponse.setDueDate(task.getDueDate());
+	        idleTasks.add(taskResponse);
+	    }
+
+	    return idleTasks;
+	}
 
 	public List<Task> filterTasks(Boolean completed, Date dueDate, Long categoryId, Long userId) {
         if (completed != null) {
@@ -219,11 +230,7 @@ public class TaskServiceImpl implements TaskService{
 		System.out.println("Added");
 	}
 
-	@Override
-	public List<Task> findIdleTasks() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 	
 	@Transactional
 	@Override
@@ -238,4 +245,7 @@ public class TaskServiceImpl implements TaskService{
 	    userRepository.save(user);
 		
 	}
+
+
+
 }

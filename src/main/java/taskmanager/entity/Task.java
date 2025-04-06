@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,6 +36,7 @@ public class Task {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long taskId;
 	
+	@Column(unique = true)
 	@NotBlank
 	@Size(min = 3, max = 20, message = "Task name must be within 3-20 characters")
 	private String taskName;
@@ -53,6 +55,7 @@ public class Task {
 	
 	@ManyToOne
 	@JoinColumn(name = "category_id", nullable = true) // Ensures every task must have a category
+	//@NotNull(message = "Category is required")
 	private Category category;
 
 	@JsonProperty("categoryId")
