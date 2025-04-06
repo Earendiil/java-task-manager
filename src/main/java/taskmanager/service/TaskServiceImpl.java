@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 import jakarta.transaction.Transactional;
 import taskmanager.dto.TaskDTO;
-import taskmanager.dto.UserIdDTO;
+import taskmanager.dto.UserResponse;
 import taskmanager.entity.Category;
 import taskmanager.entity.Task;
 import taskmanager.entity.User;
@@ -46,6 +46,7 @@ public class TaskServiceImpl implements TaskService{
 	    if (taskDTO.getCategoryId() == null) {
 	        throw new IllegalArgumentException("Category ID is required");
 	    }
+	   
 
 	    Category category = categoryRepository.findById(taskDTO.getCategoryId())
 	        .orElseThrow(() -> new IllegalArgumentException("Category ID not found: " + taskDTO.getCategoryId()));
@@ -132,8 +133,8 @@ public class TaskServiceImpl implements TaskService{
 		        dto.setCompleted(task.isCompleted());
 		        dto.setCategoryId(task.getCategory().getCategoryId());
 
-		        List<UserIdDTO> userSummaries = task.getAssignedUsers().stream()
-		            .map(user -> new UserIdDTO(user.getUserId(), user.getUsername()))
+		        List<UserResponse> userSummaries = task.getAssignedUsers().stream()
+		            .map(user -> new UserResponse(user.getUserId(), user.getUsername()))
 		            .collect(Collectors.toList());
 
 		        dto.setAssignedUsers(userSummaries);
@@ -184,13 +185,18 @@ public class TaskServiceImpl implements TaskService{
 	
 
 	@Override
-	public List<User> getUsersAssignedToTask(Long taskId) {
-		List<User> users = taskRepository.findUsersByTaskId(taskId);
+	public List<UserResponse> getUsersAssignedToTask(Long taskId) {
+	    List<UserResponse> users = taskRepository.findUsersByTaskId(taskId)
+	        .stream()
+	        .map(user -> new UserResponse(user.getUserId(), user.getUsername()))
+	        .collect(Collectors.toList());
 
-		if (users == null || users.isEmpty()) 
-		    throw new ResourceNotFoundException("Users", "for the task", taskId);
-		return 	users;
+	    if (users.isEmpty()) 
+	        throw new ResourceNotFoundException("Users", "for the task", taskId);
+
+	    return users;
 	}
+
 
 	@Override
 	public void assignToUser(Long taskId, Long userId) {

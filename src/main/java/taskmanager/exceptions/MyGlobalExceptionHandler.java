@@ -11,6 +11,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import jakarta.validation.ConstraintViolationException;
+
 
 
 @RestControllerAdvice //is the specialized annotation of @ControllerAdvice for 
@@ -46,7 +48,19 @@ public class MyGlobalExceptionHandler {
 	        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
    
-	 
+	 // Handling validations errors
+	 @ExceptionHandler(ConstraintViolationException.class)
+	 public ResponseEntity<Map<String, String>> handleConstraintViolationException(ConstraintViolationException ex) {
+	     Map<String, String> errors = new HashMap<>();
+
+	     ex.getConstraintViolations().forEach(cv -> {
+	         String propertyPath = cv.getPropertyPath().toString();
+	         String message = cv.getMessage();
+	         errors.put(propertyPath, message);
+	     });
+
+	     return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+	 }
 	 
 	 
 }

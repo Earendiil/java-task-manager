@@ -4,10 +4,9 @@ package taskmanager.service;
 import java.util.Date;
 import java.util.List;
 
-import jakarta.validation.Valid;
 import taskmanager.dto.TaskDTO;
+import taskmanager.dto.UserResponse;
 import taskmanager.entity.Task;
-import taskmanager.entity.User;
 
 
 public interface TaskService {
@@ -25,7 +24,7 @@ public interface TaskService {
 
 	List<Task> filterTasks(Boolean completed, Date dueDate, Long categoryId, Long userId);
 
-	List<User> getUsersAssignedToTask(Long taskId);
+	List<UserResponse> getUsersAssignedToTask(Long taskId);
 
 	void assignToUser(Long taskId, Long userId);
 

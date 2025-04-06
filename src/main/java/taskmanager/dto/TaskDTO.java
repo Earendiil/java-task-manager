@@ -21,7 +21,7 @@ public class TaskDTO {
     private Date dueDate;
     private boolean completed;
     private Long categoryId;
-    private List<UserIdDTO> assignedUsers = new ArrayList<>();
+    private List<UserResponse> assignedUsers = new ArrayList<>();
     
    
     

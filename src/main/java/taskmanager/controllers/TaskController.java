@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import taskmanager.dto.TaskDTO;
+import taskmanager.dto.UserResponse;
 import taskmanager.entity.Task;
 import taskmanager.entity.User;
 import taskmanager.service.TaskService;
@@ -41,7 +42,7 @@ public class TaskController {
     @PostMapping("")
 	public ResponseEntity<TaskDTO> addTask(@Valid @RequestBody TaskDTO taskDTO){
 		TaskDTO newTaskDTO = taskService.createTask(taskDTO);
-		return new ResponseEntity<TaskDTO>(taskDTO, HttpStatus.CREATED);
+		return new ResponseEntity<TaskDTO>(newTaskDTO, HttpStatus.CREATED);
 	}
     
 	@PutMapping("/{taskId}")
@@ -72,9 +73,9 @@ public class TaskController {
 	}
 	
 	@GetMapping("/{taskId}/users")
-	public ResponseEntity<List<User>> getTaskUsers(@PathVariable Long taskId){
-		List<User> usersList = taskService.getUsersAssignedToTask(taskId);
-		return new ResponseEntity<List<User>>(usersList, HttpStatus.OK);
+	public ResponseEntity<List<UserResponse>> getTaskUsers(@PathVariable Long taskId){
+		List<UserResponse> usersList = taskService.getUsersAssignedToTask(taskId);
+		return new ResponseEntity<List<UserResponse>>(usersList, HttpStatus.OK);
 		
 	}
 	
