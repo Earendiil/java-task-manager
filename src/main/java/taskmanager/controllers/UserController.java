@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import taskmanager.dto.TaskResponse;
 import taskmanager.dto.UserDTO;
 import taskmanager.dto.UserResponse;
 import taskmanager.entity.Task;
@@ -71,10 +72,10 @@ public class UserController {
 	}
 	
 	@GetMapping("/users/{userId}/tasks")
-	public ResponseEntity<List<Task>> getTasks(@PathVariable Long userId){
-		List<Task> tasks = userService.findTasks(userId);
+	public ResponseEntity<List<TaskResponse>> getUserTasks(@PathVariable Long userId){
+		List<TaskResponse> tasks = userService.findTasks(userId);
 		
-		return new ResponseEntity<List<Task>>(tasks, HttpStatus.OK);
+		return new ResponseEntity<List<TaskResponse>>(tasks, HttpStatus.OK);
 	}
 	
 	

@@ -3,6 +3,7 @@ package taskmanager.service;
 import java.util.List;
 
 import jakarta.validation.Valid;
+import taskmanager.dto.TaskResponse;
 import taskmanager.dto.UserDTO;
 import taskmanager.dto.UserResponse;
 import taskmanager.entity.Task;
@@ -21,7 +22,7 @@ public interface UserService {
 
 	void deleteUserById(Long userId);
 
-	List<Task> findTasks(Long userId);
+	List<TaskResponse> findTasks(Long userId);
 
 	
 

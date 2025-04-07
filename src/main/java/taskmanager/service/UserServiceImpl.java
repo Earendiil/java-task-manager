@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.validation.Valid;
+import taskmanager.dto.TaskResponse;
 import taskmanager.dto.UserDTO;
 import taskmanager.dto.UserResponse;
 import taskmanager.entity.Task;
@@ -84,18 +85,22 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<Task> findTasks(Long userId) {
+	public List<TaskResponse> findTasks(Long userId) {
+		List<Task> userTasks = findByUserId(userId).getTasks();
+		if (userTasks.isEmpty()) {
+			throw new ResourceNotFoundException("User has no tasks assigned");
+		}
+		return userTasks.stream()
+				.map(task -> modelMapper.map(userTasks, TaskResponse.class))
+				.collect(Collectors.toList());
 		
-		return null;
 	}
 
 
-	
-
 
 	
 
-	
+
 	
 	
 	
