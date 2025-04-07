@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import taskmanager.dto.CategoryDTO;
 import taskmanager.entity.Category;
 import taskmanager.service.CategoryService;
 
@@ -32,22 +33,22 @@ public class CategoryController {
 
 
 	@PostMapping("/create")
-	public ResponseEntity<Category> addCategory(@Valid @RequestBody Category category){
-	Category newCategory =categoryService.createCategory(category);
-		return new ResponseEntity<Category>(newCategory, HttpStatus.CREATED);
+	public ResponseEntity<String> addCategory(@Valid @RequestBody CategoryDTO categoryDTO){
+		categoryService.createCategory(categoryDTO);
+		return new ResponseEntity<String>("Category created!", HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/")
-	public ResponseEntity<List<Category>> getAllCategories(){
-		List<Category> categories = categoryService.findAllCategories();
-		return new ResponseEntity<List<Category>>(categories, HttpStatus.OK);
+	public ResponseEntity<List<CategoryDTO>> getAllCategories(){
+		List<CategoryDTO> categories = categoryService.findAllCategories();
+		return new ResponseEntity<List<CategoryDTO>>(categories, HttpStatus.OK);
 	}
 	
 	@PutMapping("/update/{categoryId}")
-	public ResponseEntity<Category> updateCategory(@Valid @PathVariable Long categoryId, 
-												@RequestBody Category category){
-			Category updatedCategory = categoryService.updateCategory(categoryId,category);									
-		return new ResponseEntity<Category>(updatedCategory, HttpStatus.OK);
+	public ResponseEntity<CategoryDTO> updateCategory(@Valid @PathVariable Long categoryId, 
+												@RequestBody CategoryDTO categoryDTO){
+			CategoryDTO updatedCategory = categoryService.updateCategory(categoryId,categoryDTO);									
+		return new ResponseEntity<CategoryDTO>(updatedCategory, HttpStatus.OK);
 		
 	}
 	@DeleteMapping("/delete/{categoryId}")

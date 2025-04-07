@@ -1,10 +1,13 @@
 package taskmanager.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import jakarta.validation.Valid;
+import taskmanager.dto.CategoryDTO;
 import taskmanager.entity.Category;
 import taskmanager.exceptions.ResourceNotFoundException;
 import taskmanager.repositories.CategoryRepository;
@@ -13,43 +16,51 @@ import taskmanager.repositories.CategoryRepository;
 public class CategoryServiceImpl implements CategoryService{
 
 	private final CategoryRepository categoryRepository;
+	private final ModelMapper modelMapper;
 	
 	
-	public CategoryServiceImpl(CategoryRepository categoryRepository) {
+	public CategoryServiceImpl(CategoryRepository categoryRepository, ModelMapper modelMapper) {
 		super();
 		this.categoryRepository = categoryRepository;
+		this.modelMapper = modelMapper;
 	}
 
 
-	@Override
-	public Category createCategory(@Valid Category category) {
-		if (categoryRepository.existsByName(category.getName())) {
+	public void createCategory(@Valid CategoryDTO categoryDTO) {
+		
+		if (categoryRepository.existsByName(categoryDTO.getName())) {
 			throw new IllegalArgumentException("Category already exists!");
 		}
-		return categoryRepository.save(category);
+		Category category = modelMapper.map(categoryDTO, Category.class);
+		categoryRepository.save(category);
+		
 	}
 
 
 	@Override
-	public List<Category> findAllCategories() {
+	public List<CategoryDTO> findAllCategories() {
 		List<Category> categories = categoryRepository.findAll();
 		if (categories.isEmpty()) {
 			throw new RuntimeException("No categories exist!");
 		}
-		return categories;
+		List<CategoryDTO> categoryDTOs = categories.stream()
+				.map(category -> modelMapper.map(category, CategoryDTO.class))
+				.collect(Collectors.toList());
+		return categoryDTOs;
 	}
 
 
 	@Override
-	public Category updateCategory(@Valid Long categoryId, Category category) {
+	public CategoryDTO updateCategory(@Valid Long categoryId, CategoryDTO categoryDTO) {
 		Category updatedCategory = categoryRepository.findById(categoryId)
 				.orElseThrow(()-> new ResourceNotFoundException("Category", "category id", categoryId));
-		if (categoryRepository.existsByName(category.getName())) {
+		if (categoryRepository.existsByName(categoryDTO.getName())) {
 			throw new IllegalArgumentException("Category name already exists!");
 		}
-		updatedCategory.setName(category.getName());
+		
+		updatedCategory.setName(categoryDTO.getName());
 		categoryRepository.save(updatedCategory);
-		return updatedCategory;
+		return modelMapper.map(updatedCategory, CategoryDTO.class);
 	}
 
 

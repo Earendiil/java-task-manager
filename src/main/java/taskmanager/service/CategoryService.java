@@ -3,15 +3,15 @@ package taskmanager.service;
 import java.util.List;
 
 import jakarta.validation.Valid;
-import taskmanager.entity.Category;
+import taskmanager.dto.CategoryDTO;
 
 public interface CategoryService {
 
-	Category createCategory(@Valid Category category);
+	public void createCategory(@Valid CategoryDTO categoryDTO);
 
-	List<Category> findAllCategories();
+	List<CategoryDTO> findAllCategories();
 
-	Category updateCategory(@Valid Long categoryId, Category category);
+	CategoryDTO updateCategory(@Valid Long categoryId, CategoryDTO categoryDTO);
 
 	void deleteCategory(Long categoryId);
 
