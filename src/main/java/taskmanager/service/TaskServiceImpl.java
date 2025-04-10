@@ -58,7 +58,7 @@ public class TaskServiceImpl implements TaskService{
 	    task.setTitle(taskDTO.getTitle());
 	    task.setDescription(taskDTO.getDescription());
 	    task.setDueDate(taskDTO.getDueDate());
-	    task.setCompleted(taskDTO.isCompleted());
+	    task.setCompleted(taskDTO.isCompleted()); //added
 	    task.setCategory(category);
 	  
 	    Task savedTask = taskRepository.save(task);
