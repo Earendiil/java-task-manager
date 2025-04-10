@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import taskmanager.dto.CategoryDTO;
-import taskmanager.entity.Category;
 import taskmanager.service.CategoryService;
 
 @RestController

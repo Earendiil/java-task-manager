@@ -41,12 +41,12 @@ public class CategoryServiceImpl implements CategoryService{
 	public List<CategoryDTO> findAllCategories() {
 		List<Category> categories = categoryRepository.findAll();
 		if (categories.isEmpty()) {
-			throw new RuntimeException("No categories exist!");
+			throw new ResourceNotFoundException("No categories exist!");
 		}
-		List<CategoryDTO> categoryDTOs = categories.stream()
+		return categories.stream()
 				.map(category -> modelMapper.map(category, CategoryDTO.class))
 				.collect(Collectors.toList());
-		return categoryDTOs;
+		
 	}
 
 

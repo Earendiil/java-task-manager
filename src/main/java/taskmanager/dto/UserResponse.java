@@ -11,4 +11,5 @@ public class UserResponse {
 
 	  private Long userId;
 	  private String username;
+	  
 }

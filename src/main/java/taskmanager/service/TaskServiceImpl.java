@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 import jakarta.transaction.Transactional;
@@ -89,6 +87,7 @@ public class TaskServiceImpl implements TaskService{
 		updatedTask.setDueDate(taskDTO.getDueDate());
 		updatedTask.setTitle(taskDTO.getTitle());
 	    updatedTask.setCategoryId(taskDTO.getCategoryId());
+	    updatedTask.setCompleted(taskDTO.isCompleted());
 		
 		taskRepository.save(updatedTask);
 	

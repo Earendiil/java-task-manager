@@ -21,7 +21,6 @@ import taskmanager.dto.TaskDTO;
 import taskmanager.dto.TaskResponse;
 import taskmanager.dto.UserResponse;
 import taskmanager.service.TaskService;
-import taskmanager.service.UserService;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -45,9 +44,9 @@ public class TaskController {
     
 	@PutMapping("/{taskId}")
 	public ResponseEntity<TaskDTO> updateTask(@Valid @PathVariable Long taskId,
-											@RequestBody TaskDTO task){
+											@RequestBody TaskDTO taskDTO){
 		
-		TaskDTO updatedTask = taskService.updateTask(taskId, task);
+		TaskDTO updatedTask = taskService.updateTask(taskId, taskDTO);
 		return new ResponseEntity<TaskDTO>(updatedTask, HttpStatus.OK);
 	}
 	

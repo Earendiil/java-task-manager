@@ -18,7 +18,6 @@ import jakarta.validation.Valid;
 import taskmanager.dto.TaskResponse;
 import taskmanager.dto.UserDTO;
 import taskmanager.dto.UserResponse;
-import taskmanager.entity.Task;
 import taskmanager.entity.User;
 import taskmanager.service.UserService;
 
