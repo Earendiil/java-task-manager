@@ -3,6 +3,7 @@ package taskmanager.service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,11 +45,14 @@ public class TaskServiceImpl implements TaskService{
 
 	@Override
 	public TaskDTO createTask(TaskDTO taskDTO) {
-	    if (taskDTO.getCategoryId() == null) {
+		 if (taskRepository.existsByTaskName(taskDTO.getTaskName())) {
+		        throw new IllegalArgumentException("Username already exists!");
+		 }
+	   
+		if (taskDTO.getCategoryId() == null) {
 	        throw new IllegalArgumentException("Category ID is required");
 	    }
 	   
-
 	    Category category = categoryRepository.findById(taskDTO.getCategoryId())
 	        .orElseThrow(() -> new IllegalArgumentException("Category ID not found: " + taskDTO.getCategoryId()));
 
@@ -76,11 +80,13 @@ public class TaskServiceImpl implements TaskService{
 		if (taskDTO.getDueDate() != null && taskDTO.getDueDate().before(new Date())) {
 	        throw new IllegalArgumentException("Due date must be in the future!");
 	    }
-		
 	    categoryRepository.findById(taskDTO.getCategoryId())
 	        .orElseThrow(() -> new IllegalArgumentException("Category id not found: " + taskDTO.getCategoryId()));
-	 
-	    
+	   
+	    if (taskRepository.existsByTaskName(taskDTO.getTaskName())) {
+	        throw new IllegalArgumentException("Username already exists!");
+	    }
+	   
 	    Task updatedTask = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task", "task id", taskId));
 		updatedTask.setTaskName(taskDTO.getTaskName());
 	    updatedTask.setDescription(taskDTO.getDescription());

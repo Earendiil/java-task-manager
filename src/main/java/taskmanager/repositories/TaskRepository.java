@@ -25,6 +25,8 @@ public interface TaskRepository extends JpaRepository<Task, Long>{
 	List<User> findUsersByTaskId(Long taskId);
 
 	List<Task> findByAssignedUsersIsEmpty();
+
+	boolean existsByTaskName(String taskName);
 	
 	
 	

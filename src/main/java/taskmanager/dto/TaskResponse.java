@@ -14,4 +14,5 @@ public class TaskResponse {
 	private Long taskId;
     private String taskName;
     private Date dueDate;
+    private Boolean completed;
 }
