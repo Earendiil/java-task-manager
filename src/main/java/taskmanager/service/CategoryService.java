@@ -15,6 +15,8 @@ public interface CategoryService {
 
 	void deleteCategory(Long categoryId);
 
+	public CategoryDTO getCategoryById(Long categoryId);
+
 	
 	
 		

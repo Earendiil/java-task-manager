@@ -56,6 +56,11 @@ public class CategoryController {
 		return new ResponseEntity<String>("Category deleted!" , HttpStatus.OK);
 	}
 	
+	@GetMapping("/{categoryId}")
+	public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long categoryId){
+		CategoryDTO categoryDTO = categoryService.getCategoryById(categoryId);
+		return new ResponseEntity<CategoryDTO>(categoryDTO, HttpStatus.OK);
+	}
 	
 	
 	

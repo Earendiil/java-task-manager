@@ -1,9 +1,6 @@
 package taskmanager.entity;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
