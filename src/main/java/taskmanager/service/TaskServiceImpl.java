@@ -79,19 +79,22 @@ public class TaskServiceImpl implements TaskService{
 		if (taskDTO.getDueDate() != null && taskDTO.getDueDate().before(new Date())) {
 	        throw new IllegalArgumentException("Due date must be in the future!");
 	    }
-	    categoryRepository.findById(taskDTO.getCategoryId())
-	        .orElseThrow(() -> new IllegalArgumentException("Category id not found: " + taskDTO.getCategoryId()));
-	   
-	    if (taskRepository.existsByTaskName(taskDTO.getTaskName())) {
-	        throw new IllegalArgumentException("Username already exists!");
-	    }
+		
+		// we currently don't want to change the Name or Category
+		
+//	    categoryRepository.findById(taskDTO.getCategoryId())
+//	        .orElseThrow(() -> new IllegalArgumentException("Category id not found: " + taskDTO.getCategoryId()));
+//	   
+//	    if (taskRepository.existsByTaskName(taskDTO.getTaskName())) {
+//	        throw new IllegalArgumentException("Username already exists!");
+//	    }
 	   
 	    Task updatedTask = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task", "task id", taskId));
-		updatedTask.setTaskName(taskDTO.getTaskName());
+		//updatedTask.setTaskName(taskDTO.getTaskName());
 	    updatedTask.setDescription(taskDTO.getDescription());
 		updatedTask.setDueDate(taskDTO.getDueDate());
 		updatedTask.setTitle(taskDTO.getTitle());
-	    updatedTask.setCategoryId(taskDTO.getCategoryId());
+	//    updatedTask.setCategoryId(taskDTO.getCategoryId());
 	    updatedTask.setCompleted(taskDTO.isCompleted());
 		
 		taskRepository.save(updatedTask);

@@ -42,7 +42,7 @@ public class Task {
 	private String taskName;
 	
 	@NotBlank(message = "Tittle is required")
-	@Size(min = 5, max = 20, message = "Title must be within 5-20 characters")
+	@Size(min = 1, max = 20, message = "Title can't be empty")
 	private String title;
 	@Size(max = 150, message = "Cannot exceed 150 characters")
 	private String description;

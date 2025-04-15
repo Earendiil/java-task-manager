@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService{
 	public List<UserResponse> findAllUsers() {
 		List<User> users =	userRepository.findAll();
 			if (users.isEmpty()) {
-				throw new RuntimeException("No Users exist");
+				throw new ResourceNotFoundException("No Users exist");
 			}
 			
 		// this is needed to map an entire list	
