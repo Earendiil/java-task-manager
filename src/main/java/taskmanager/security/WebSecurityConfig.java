@@ -1,18 +1,14 @@
 package taskmanager.security;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 //import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -25,15 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import taskmanager.entity.AppRole;
-import taskmanager.entity.Category;
-import taskmanager.entity.Role;
-import taskmanager.entity.Task;
-import taskmanager.entity.User;
-import taskmanager.repositories.CategoryRepository;
-import taskmanager.repositories.RoleRepository;
-import taskmanager.repositories.TaskRepository;
-import taskmanager.repositories.UserRepository;
 import taskmanager.security.jwt.AuthEntryPointJwt;
 import taskmanager.security.jwt.AuthTokenFilter;
 import taskmanager.security.jwt.JwtUtils;
@@ -41,7 +28,7 @@ import taskmanager.security.services.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
-//@EnableMethodSecurity
+//@EnableMethodSecurity(prePostEnabled = true)  // Enables @PreAuthorize in controllers
 public class WebSecurityConfig {
     @Autowired
     UserDetailsServiceImpl userDetailsService;

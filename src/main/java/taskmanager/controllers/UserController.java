@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,11 +27,7 @@ import taskmanager.service.UserService;
 @RequestMapping("/api")
 public class UserController {
 
-	// testing react connection
-	@GetMapping("/hello")
-    public String sayHello() {
-        return "Hello from Spring Boot!";
-    }
+
 	
 	private final UserService userService;
 	
@@ -38,7 +35,7 @@ public class UserController {
 		super();
 		this.userService = userService;
 	}
-
+	//@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping("/user")
 	public ResponseEntity<String> addUser(@Valid @RequestBody UserDTO userDTO){
 		 userService.createUser(userDTO);
@@ -57,13 +54,13 @@ public class UserController {
 		UserDTO userDTO = userService.findByUserId(userId);
 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}
-	
+	//@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PutMapping("/users/{userId}")
 	public ResponseEntity<String> updateUser(@Valid @PathVariable Long userId, @RequestBody User user){
 		userService.updateUser(userId, user);
 		return ResponseEntity.ok("User updated!");
 	}
-
+	//@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@DeleteMapping("/users/{userId}")
 	public ResponseEntity<String> deleteUser(@PathVariable Long userId){
 		userService.deleteUserById(userId);
