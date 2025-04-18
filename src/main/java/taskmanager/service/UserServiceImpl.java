@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService{
 			throw new ResourceNotFoundException("User has no tasks assigned");
 		}
 		return userTasks.stream()
-				.map(task -> modelMapper.map(userTasks, TaskResponse.class))
+				.map(task -> modelMapper.map(task, TaskResponse.class))
 				.collect(Collectors.toList());
 		
 	}
