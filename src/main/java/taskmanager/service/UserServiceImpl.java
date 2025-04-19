@@ -1,5 +1,6 @@
 package taskmanager.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,7 +89,7 @@ public class UserServiceImpl implements UserService{
 	public List<TaskResponse> findTasks(Long userId) {
 		List<Task> userTasks = findByUserId(userId).getTasks();
 		if (userTasks.isEmpty()) {
-			throw new ResourceNotFoundException("User has no tasks assigned");
+			return new ArrayList<>();
 		}
 		return userTasks.stream()
 				.map(task -> modelMapper.map(task, TaskResponse.class))
