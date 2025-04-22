@@ -28,8 +28,8 @@ public class ATaskManagerApplication {
 		SpringApplication.run(ATaskManagerApplication.class, args);
 	}
 
-	@Bean
-    public CommandLineRunner initData(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, TaskRepository taskRepository, CategoryRepository categoryRepository) {
+    @Bean
+    CommandLineRunner initData(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, TaskRepository taskRepository, CategoryRepository categoryRepository) {
         return args -> {
             // Initialize roles
             Role userRole = roleRepository.findByRoleName(AppRole.ROLE_USER)
@@ -80,7 +80,9 @@ public class ATaskManagerApplication {
             Task task2 = new Task("Frontend design", "Frontend task", "This is a description for the frontend task", futureDate2, false, category2);
             Task task3 = new Task("Deploy app", "DevOps task", "This is a description for the DevOps task", futureDate3, false, category3);
 
+            
             taskRepository.saveAll(List.of(task1, task2, task3));
+            
         };
     }
 	
