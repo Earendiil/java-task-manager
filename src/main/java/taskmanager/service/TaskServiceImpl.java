@@ -90,11 +90,12 @@ public class TaskServiceImpl implements TaskService{
 //	    }
 	   
 	    Task updatedTask = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task", "task id", taskId));
-		//updatedTask.setTaskName(taskDTO.getTaskName());
+	  //updatedTask.setTaskName(taskDTO.getTaskName());
+	  //updatedTask.setCategoryId(taskDTO.getCategoryId());
 	    updatedTask.setDescription(taskDTO.getDescription());
 		updatedTask.setDueDate(taskDTO.getDueDate());
 		updatedTask.setTitle(taskDTO.getTitle());
-	//    updatedTask.setCategoryId(taskDTO.getCategoryId());
+	
 	    updatedTask.setCompleted(taskDTO.isCompleted());
 		
 		taskRepository.save(updatedTask);
