@@ -61,7 +61,7 @@ public class TaskServiceImpl implements TaskService{
 	    task.setTitle(taskDTO.getTitle());
 	    task.setDescription(taskDTO.getDescription());
 	    task.setDueDate(taskDTO.getDueDate());
-	    task.setCompleted(taskDTO.isCompleted()); //added
+	    task.setCompleted(taskDTO.isCompleted()); 
 	    task.setCategory(category);
 	  
 	    Task savedTask = taskRepository.save(task);
@@ -126,11 +126,11 @@ public class TaskServiceImpl implements TaskService{
 		    if (sortBy != null && sortDirection != null) {
 		        if ("asc".equalsIgnoreCase(sortDirection)) {
 		            tasks = tasks.stream()
-		                         .sorted(Comparator.comparing(Task::getDueDate))  // Change to the appropriate field
+		                         .sorted(Comparator.comparing(Task::getDueDate))  
 		                         .collect(Collectors.toList());
 		        } else if ("desc".equalsIgnoreCase(sortDirection)) {
 		            tasks = tasks.stream()
-		                         .sorted(Comparator.comparing(Task::getDueDate).reversed())  // Change to the appropriate field
+		                         .sorted(Comparator.comparing(Task::getDueDate).reversed())  
 		                         .collect(Collectors.toList());
 		        }
 		        }
