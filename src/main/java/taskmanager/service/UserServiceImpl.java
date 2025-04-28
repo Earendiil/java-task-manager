@@ -87,15 +87,25 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public List<TaskResponse> findTasks(Long userId) {
-		List<Task> userTasks = findByUserId(userId).getTasks();
-		if (userTasks.isEmpty()) {
-			return new ArrayList<>();
-		}
-		return userTasks.stream()
-				.map(task -> modelMapper.map(task, TaskResponse.class))
-				.collect(Collectors.toList());
-		
+	    List<Task> userTasks = findByUserId(userId).getTasks();
+	    if (userTasks.isEmpty()) {
+	        return new ArrayList<>();
+	    }
+	    return userTasks.stream()
+	            .map(task -> {
+	                TaskResponse response = modelMapper.map(task, TaskResponse.class);
+	                
+	               
+	                List<UserResponse> assignedUsers = task.getAssignedUsers().stream()
+	                        .map(user -> modelMapper.map(user, UserResponse.class))
+	                        .collect(Collectors.toList());
+	                response.setAssignedUsers(assignedUsers);
+	                
+	                return response;
+	            })
+	            .collect(Collectors.toList());
 	}
+
 
 
 
