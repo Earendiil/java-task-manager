@@ -85,6 +85,7 @@ public class WebSecurityConfig {
     	            auth.requestMatchers("/api/**").permitAll() // Allow all API requests for testing
     	                .requestMatchers("/h2-console/**").permitAll()
     	                .requestMatchers("/swagger-ui/**").permitAll()
+    	                .requestMatchers("/actuator/**").permitAll()
     	                .anyRequest().authenticated()
     	        )
     	        .authenticationProvider(authenticationProvider())
