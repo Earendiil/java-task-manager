@@ -72,7 +72,7 @@ public class WebSecurityConfig {
     	    http
     	        .cors(cors -> cors.configurationSource(request -> {
     	            CorsConfiguration config = new CorsConfiguration();
-    	            config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174, http://localhost:3000")); // Allow frontend
+    	            config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174", "http://localhost:3000")); // Allow frontend
     	            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allow all RESTful methods
     	            config.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Allow important headers
     	            config.setAllowCredentials(true); // Allow cookies or JWT authentication
