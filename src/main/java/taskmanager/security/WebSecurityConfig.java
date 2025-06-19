@@ -72,24 +72,29 @@ public class WebSecurityConfig {
     	    http
     	        .cors(cors -> cors.configurationSource(request -> {
     	            CorsConfiguration config = new CorsConfiguration();
-    	            config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174", "http://localhost:3000")); // Allow frontend
-    	            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allow all RESTful methods
-    	            config.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Allow important headers
-    	            config.setAllowCredentials(true); // Allow cookies or JWT authentication
-    	            return config;
+    	            config.setAllowedOrigins(List.of(
+    	                "http://localhost:5173",
+    	                "http://localhost:5174",
+    	                "http://localhost:8080",
+    	                "http://localhost:8081",
+    	                "http://localhost:8082"
+    	               
+	            ));
+	            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+	            config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+	            config.setAllowCredentials(true);
+	            return config;
     	        }))
-    	        .csrf(csrf -> csrf.disable()) // Disable CSRF for testing
+    	        .csrf(csrf -> csrf.disable())
     	        .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
     	        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-    	        .authorizeHttpRequests(auth ->
-    	            auth.requestMatchers("/api/**").permitAll() // Allow all API requests for testing
-    	                .requestMatchers("/h2-console/**").permitAll()
-    	                .requestMatchers("/swagger-ui/**").permitAll()
-    	                .requestMatchers("/actuator/**").permitAll()
-    	                .anyRequest().authenticated()
+    	        .authorizeHttpRequests(auth -> auth
+    	            .requestMatchers("/api/auth/**").permitAll()
+    	            .requestMatchers("/api/**").permitAll()
+    	            .anyRequest().authenticated()
     	        )
     	        .authenticationProvider(authenticationProvider())
-    	        .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class) // Enable if using JWT
+    	        .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
     	        .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
     	    return http.build();
