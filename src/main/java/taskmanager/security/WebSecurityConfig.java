@@ -73,11 +73,12 @@ public class WebSecurityConfig {
     	        .cors(cors -> cors.configurationSource(request -> {
     	            CorsConfiguration config = new CorsConfiguration();
     	            config.setAllowedOrigins(List.of(
-    	                "http://localhost:5173",
-    	                "http://localhost:5174",
-    	                "http://localhost:8080",
-    	                "http://localhost:8081",
-    	                "http://localhost:8082"
+    	            		"http://localhost:5301",  // Task Manager frontend
+    	            	    "http://localhost:5302",  // Cloud Storage frontend
+    	            	    "http://localhost:5300",  // Homepage
+    	            	    "http://localhost:5173",  // dev mode
+    	            	    "http://localhost:8081",  // Cloud Storage backend
+    	            	    "http://localhost:8082"   // Task Manager backend
     	               
 	            ));
 	            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
