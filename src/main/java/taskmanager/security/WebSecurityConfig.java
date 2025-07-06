@@ -75,7 +75,9 @@ public class WebSecurityConfig {
     	            config.setAllowedOrigins(List.of(
     	            		"http://localhost:5301",  // Task Manager frontend
     	            	    "http://localhost:5173",  // dev mode
-    	            	    "http://23.88.57.34:5301"
+    	            	    "http://23.88.57.34:5301",
+    	            	    "https://app1.flinkfiles.com",
+    	                    "https://app2.flinkfiles.com"
 	            ));
 	            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 	            config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
