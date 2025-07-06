@@ -74,12 +74,8 @@ public class WebSecurityConfig {
     	            CorsConfiguration config = new CorsConfiguration();
     	            config.setAllowedOrigins(List.of(
     	            		"http://localhost:5301",  // Task Manager frontend
-    	            	    "http://localhost:5302",  // Cloud Storage frontend
-    	            	    "http://localhost:5300",  // Homepage
     	            	    "http://localhost:5173",  // dev mode
-    	            	    "http://localhost:8081",  // Cloud Storage backend
-    	            	    "http://localhost:8082"   // Task Manager backend
-    	               
+    	            	    "http://23.88.57.34:5301"
 	            ));
 	            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 	            config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
