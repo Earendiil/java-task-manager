@@ -55,10 +55,14 @@ public class UserController {
 	}
 	//@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PutMapping("/users/{userId}")
-	public ResponseEntity<String> updateUser(@Valid @PathVariable Long userId, @RequestBody User user){
-		userService.updateUser(userId, user);
-		return ResponseEntity.ok("User updated!");
+	public ResponseEntity<String> updateUser(
+	    @PathVariable Long userId,
+	    @Valid @RequestBody UserDTO userDTO) {
+
+	    userService.updateUser(userId, userDTO);
+	    return ResponseEntity.ok("User updated!");
 	}
+
 	//@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@DeleteMapping("/users/{userId}")
 	public ResponseEntity<String> deleteUser(@PathVariable Long userId){

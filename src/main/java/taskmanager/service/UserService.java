@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import taskmanager.dto.TaskResponse;
 import taskmanager.dto.UserDTO;
 import taskmanager.dto.UserResponse;
-import taskmanager.entity.User;
 
 public interface UserService {
 
@@ -17,7 +16,7 @@ public interface UserService {
 
 	UserDTO findByUserId(Long userId);
 
-	User updateUser(Long userId, User user);
+	void updateUser(Long userId, @Valid UserDTO userDTO);
 
 	void deleteUserById(Long userId);
 

@@ -64,19 +64,20 @@ public class UserServiceImpl implements UserService{
 		return modelMapper.map(user, UserDTO.class);
 	}
 
-	@Override
-	public User updateUser(Long userId, User user) {
-		User updatedUser = userRepository.findById(userId).orElseThrow(()->  new ResourceNotFoundException("User", "user id", userId));
-		
-		if (userRepository.existsByEmail(user.getEmail()) && !updatedUser.getEmail().equals(user.getEmail())) {
-			throw new IllegalArgumentException("Email already exists!");
-		}
-		
-		updatedUser.setEmail(user.getEmail());
-		updatedUser.setPassword(user.getPassword());
-		updatedUser.setRoles(user.getRoles());
-		userRepository.save(updatedUser);
-		return updatedUser;
+	public void updateUser(Long id, UserDTO userDTO) {
+	    User existingUser = userRepository.findById(id)
+	        .orElseThrow(() -> new ResourceNotFoundException("User", "user id", id));
+
+	    if (!existingUser.getEmail().equals(userDTO.getEmail())
+	        && userRepository.existsByEmail(userDTO.getEmail())) {
+	        throw new IllegalArgumentException("Email already exists!");
+	    }
+
+	    modelMapper.map(userDTO, existingUser);
+	    existingUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+
+	    userRepository.save(existingUser);
+	
 	}
 
 	@Override
@@ -105,6 +106,8 @@ public class UserServiceImpl implements UserService{
 	            })
 	            .collect(Collectors.toList());
 	}
+
+
 
 
 
